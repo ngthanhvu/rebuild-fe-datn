@@ -55,7 +55,7 @@
                 </router-link>
 
                 <!-- Cart -->
-                <div class="relative cursor-pointer">
+                <div class="relative cursor-pointer" @click="toggleCart">
                     <i class="bi bi-cart text-xl"></i>
                     <span
                         class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
@@ -64,8 +64,16 @@
                 </div>
 
                 <!-- Auth -->
-                <div class="relative cursor-pointer">
-                    <i class="bi bi-person text-2xl"></i>
+                <div class="auth-dropdown">
+                    <div class="auth-toggle bg-transparent border-0 text-gray-700 relative cursor-pointer">
+                        <i class="bi bi-person text-2xl"></i>
+                    </div>
+                    <div v-if="!token" class="absolute top-full left-0 w-full">
+                        <AuthMenu />
+                    </div>
+                    <div v-else class="absolute top-full left-0 w-full">
+                        <UserMenu />
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,10 +81,21 @@
         <!-- Mobile Menu -->
         <MobileMenu :is-open="false" @close="() => { }" />
     </nav>
+    <CartPanel :is-open="isCartOpen" @close="toggleCart" />
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import TopBar from './Topbar.vue';
+import AuthMenu from '../auth/AuthMenu.vue';
+import UserMenu from '../auth/UserMenu.vue';
+import CartPanel from '../common/CartPanel.vue';
+
+const isCartOpen = ref(false);
+const toggleCart = () => { isCartOpen.value = !isCartOpen.value; };
+const token = ref(false);
+
+
 </script>
 <style scoped>
 /* Optional styles to mimic Bootstrap behavior */
@@ -86,5 +105,15 @@ import TopBar from './Topbar.vue';
 
 .group:hover .group-hover\:opacity-100 {
     opacity: 1;
+}
+
+.auth-dropdown {
+    position: relative;
+}
+
+.auth-dropdown:hover .auth-menu {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
 }
 </style>

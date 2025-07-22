@@ -42,7 +42,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import Card from '../UI/Card.vue'
+import Card from '../ui/Card.vue'
 
 // Tạm thời dùng data cứng
 const isLoading = ref(false)

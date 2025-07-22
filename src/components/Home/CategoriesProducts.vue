@@ -51,7 +51,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import Card from '../UI/Card.vue'
+import Card from '../ui/Card.vue'
 
 // Dữ liệu cứng danh mục
 const categories = ref([

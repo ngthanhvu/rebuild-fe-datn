@@ -26,16 +26,16 @@
 
 <script setup>
 import { useHead } from '@vueuse/head';
-import Banner from '../components/Home/Banner.vue';
-import SwiperSlider from '../components/Home/SwiperSlider.vue';
-import ServiceFeatures from '../components/Home/ServiceFeatures.vue';
-import CategoriesList from '../components/Home/CategoriesList.vue';
-import CouponList from '../components/Home/CouponList.vue';
-import NewProducts from '../components/Home/NewProducts.vue';
-import CategoriesProducts from '../components/Home/CategoriesProducts.vue';
-import HotBrands from '../components/Home/HotBrands.vue';
-import ReviewLatest from '../components/Home/ReviewLatest.vue';
-import FeaturedBlogs from '../components/Home/FeaturedBlogs.vue';
+import Banner from '../components/home/Banner.vue';
+import SwiperSlider from '../components/home/SwiperSlider.vue';
+import ServiceFeatures from '../components/home/ServiceFeatures.vue';
+import CategoriesList from '../components/home/CategoriesList.vue';
+import CouponList from '../components/home/CouponList.vue';
+import NewProducts from '../components/home/NewProducts.vue';
+import CategoriesProducts from '../components/home/CategoriesProducts.vue';
+import HotBrands from '../components/home/HotBrands.vue';
+import ReviewLatest from '../components/home/ReviewLatest.vue';
+import FeaturedBlogs from '../components/home/FeaturedBlogs.vue';
 useHead({
     title: "Trang chủ | DEVGANG",
     meta: [
