@@ -1,0 +1,90 @@
+<template>
+    <TopBar />
+    <nav class="sticky top-0 z-50 bg-white shadow-sm py-1">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+            <!-- Logo -->
+            <router-link to="/" class="flex items-center">
+                <img src="/logo.png" alt="EGA MEN" class="w-20" />
+            </router-link>
+
+            <!-- Desktop Navigation -->
+            <ul class="hidden lg:flex gap-6 text-md font-medium text-gray-700">
+                <li>
+                    <router-link to="/" class="hover:text-[#81aacc]">Trang chủ</router-link>
+                </li>
+                <li class="relative group">
+                    <router-link to="/san-pham" class="hover:text-[#81aacc]">Sản phẩm</router-link>
+                    <div
+                        class="absolute left-1/2 -translate-x-1/2 mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all">
+                        <MegaMenu />
+                    </div>
+                </li>
+                <li>
+                    <router-link to="/gioi-thieu" class="hover:text-[#81aacc]">Giới thiệu</router-link>
+                </li>
+                <li>
+                    <router-link to="/tin-tuc" class="hover:text-[#81aacc]">Tin tức</router-link>
+                </li>
+                <li>
+                    <router-link to="/lien-he" class="hover:text-[#81aacc]">Liên hệ</router-link>
+                </li>
+                <li>
+                    <router-link to="/tra-cuu-don-hang" class="hover:text-[#81aacc]">Kiểm tra đơn hàng</router-link>
+                </li>
+            </ul>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-2xl text-gray-700">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Desktop Icons -->
+            <div class="hidden lg:flex items-center gap-4 text-gray-700">
+                <!-- Search -->
+                <button class="text-lg">
+                    <i class="bi bi-search"></i>
+                </button>
+
+                <!-- Wishlist -->
+                <router-link to="/san-pham-yeu-thich" class="relative text-xl">
+                    <i class="bi bi-heart"></i>
+                    <span
+                        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                        0
+                    </span>
+                </router-link>
+
+                <!-- Cart -->
+                <div class="relative cursor-pointer">
+                    <i class="bi bi-cart text-xl"></i>
+                    <span
+                        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                        0
+                    </span>
+                </div>
+
+                <!-- Auth -->
+                <div class="relative cursor-pointer">
+                    <i class="bi bi-person text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <MobileMenu :is-open="false" @close="() => { }" />
+    </nav>
+</template>
+
+<script setup>
+import TopBar from './Topbar.vue';
+</script>
+<style scoped>
+/* Optional styles to mimic Bootstrap behavior */
+.group:hover .group-hover\:visible {
+    visibility: visible;
+}
+
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+}
+</style>
