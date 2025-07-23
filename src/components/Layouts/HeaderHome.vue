@@ -68,7 +68,7 @@
                     <div class="auth-toggle bg-transparent border-0 text-gray-700 relative cursor-pointer">
                         <i class="bi bi-person text-2xl"></i>
                     </div>
-                    <div v-if="!token" class="absolute top-full left-0 w-full">
+                    <div v-if="!isLoggedIn" class="absolute top-full left-0 w-full">
                         <AuthMenu />
                     </div>
                     <div v-else class="absolute top-full left-0 w-full">
@@ -85,15 +85,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TopBar from './Topbar.vue';
 import AuthMenu from '../auth/AuthMenu.vue';
 import UserMenu from '../auth/UserMenu.vue';
 import CartPanel from '../common/CartPanel.vue';
+import { useAuthStore } from '../../stores/auth'
+import Cookies from 'js-cookie'
 
 const isCartOpen = ref(false);
 const toggleCart = () => { isCartOpen.value = !isCartOpen.value; };
-const token = ref(false);
+
+const authStore = useAuthStore()
+
+onMounted(() => {
+    if (!authStore.user && Cookies.get('user')) {
+        try {
+            authStore.setUser(JSON.parse(Cookies.get('user')))
+        } catch { }
+    }
+})
+
+const isLoggedIn = computed(() => !!authStore.user)
 
 
 </script>

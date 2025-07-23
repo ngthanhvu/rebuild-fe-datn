@@ -1,7 +1,7 @@
 <template>
     <div class="auth-menu">
         <div class="w-[250px] py-3">
-            <div class="px-4 pb-2 mb-2 border-b">
+            <div class="px-4 pb-2 mb-2 border-b border-gray-200">
                 <h6 class="font-medium text-gray-900 mb-1">Xin chào!</h6>
                 <p class="text-sm text-gray-600">
                     Chào mừng <strong>{{ user?.username }}</strong> đến với DEVGANG
@@ -35,12 +35,21 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/auth'
+import { useAuth } from '../../composable/useAuth'
+import { nextTick } from 'vue'
 
 const router = useRouter()
-const { logout, isAdmin } = useAuth()
+const authStore = useAuthStore()
+const { logout } = useAuth()
 
-const handleLogout = () => {
+const user = authStore.user
+const isAdmin = user && user.role === 'admin'
+
+const handleLogout = async () => {
     logout()
+    authStore.clearUser()
+    await nextTick()
     router.push('/login')
 }
 </script>
