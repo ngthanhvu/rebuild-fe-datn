@@ -73,6 +73,7 @@ import { useAuth } from '../../composable/useAuth'
 import { useAuthStore } from '../../stores/auth'
 import Cookies from 'js-cookie'
 import { useCaptcha } from '../../composable/useCapcha'
+import { push } from 'notivue'
 
 const { register } = useAuth()
 const authStore = useAuthStore()
@@ -165,7 +166,10 @@ const handleRegister = async () => {
             isLoading.value = false
             localStorage.setItem('rememberedEmail', form.email)
             localStorage.setItem('rememberedPassword', form.password)
-            window.location.href = '/'
+            push.success('Đăng ký thành công! Đang chuyển hướng...')
+            setTimeout(() => {
+                window.location.href = '/'
+            }, 3000)
         }
     } catch {
         error.register = 'Đăng ký thất bại!'

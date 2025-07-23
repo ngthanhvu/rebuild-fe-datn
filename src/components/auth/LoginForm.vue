@@ -67,6 +67,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useAuth } from '../../composable/useAuth'
 import { useAuthStore } from '../../stores/auth'
+import { push } from 'notivue'
 
 const form = reactive({ email: '', password: '' })
 const error = reactive({ email: '', password: '' })
@@ -134,13 +135,17 @@ const handleLogin = async () => {
                 localStorage.removeItem('rememberedPassword')
             }
             isLoading.value = false
-            window.location.href = '/'
+            push.success('Đăng nhập thành công! Đang chuyển hướng...')
+            setTimeout(() => {
+                window.location.href = '/'
+            }, 3000)
         } else {
             error.email = 'Email hoặc mật khẩu không đúng'
             isLoading.value = false
         }
     } catch (err) {
         error.email = 'Đăng nhập thất bại'
+        console.log(err)
         isLoading.value = false
     }
 }
