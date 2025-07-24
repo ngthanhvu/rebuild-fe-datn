@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DefaultLayout from '../layouts/DefaultLayout.vue'
 import Home from '../pages/index.vue'
 import ProductsPage from '../pages/products.vue'
+import ProducDetail from '../pages/detail.vue';
 import LoginPage from '../pages/auth/login.vue'
 import RegisterPage from '../pages/auth/register.vue'
 
@@ -30,7 +31,11 @@ const routes = [
             {
                 path: '/san-pham',
                 component: ProductsPage,
-                meta: { requiresAuth: true, requiresUser: true }
+                // meta: { requiresAuth: true, requiresUser: true }
+            },
+            {
+                path: '/san-pham/:slug',
+                component: ProducDetail
             }
         ]
     },

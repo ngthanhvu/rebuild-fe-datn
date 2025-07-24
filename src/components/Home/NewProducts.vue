@@ -30,7 +30,7 @@
 
         <!-- Product Grid -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            <Card v-for="product in products.slice(0, 5)" :key="product.id" :product="product" />
+            <Card v-for="product in products" :key="product.id" :product="product" />
         </div>
 
         <!-- Empty -->
@@ -41,98 +41,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Card from '../ui/Card.vue'
+import { useProductStore } from '../../stores/products'
 
-// Tạm thời dùng data cứng
-const isLoading = ref(false)
-const error = ref(null)
+const productStore = useProductStore()
 
-const products = ref([
-    {
-        id: 1,
-        slug: 'ao-thun-basic',
-        name: 'Áo thun basic nam cotton thoáng mát',
-        price: 199000,
-        discount_price: 159000,
-        categories_id: 1,
-        images: [
-            {
-                is_main: 1,
-                image_path: 'https://placehold.co/300x400?text=Product+1'
-            }
-        ],
-        variants: [
-            { color: '#000000' },
-            { color: '#f87171' },
-            { color: '#60a5fa' }
-        ]
-    },
-    {
-        id: 2,
-        slug: 'quan-jean-nam',
-        name: 'Quần jean nam ống đứng trẻ trung',
-        price: 299000,
-        discount_price: 0,
-        categories_id: 2,
-        images: [
-            {
-                is_main: 1,
-                image_path: 'https://placehold.co/300x400?text=Product+2'
-            }
-        ],
-        variants: [{ color: '#334155' }]
-    },
-    {
-        id: 3,
-        slug: 'ao-khoac-du',
-        name: 'Áo khoác dù 2 lớp chống nước',
-        price: 399000,
-        discount_price: 349000,
-        categories_id: 1,
-        images: [
-            {
-                is_main: 1,
-                image_path: 'https://placehold.co/300x400?text=Product+3'
-            }
-        ],
-        variants: [
-            { color: '#facc15' },
-            { color: '#4ade80' }
-        ]
-    },
-    {
-        id: 4,
-        slug: 'giay-sneaker',
-        name: 'Giày sneaker năng động cho nam',
-        price: 499000,
-        discount_price: 450000,
-        categories_id: 3,
-        images: [
-            {
-                is_main: 1,
-                image_path: 'https://placehold.co/300x400?text=Product+4'
-            }
-        ],
-        variants: [
-            { color: '#ffffff' },
-            { color: '#1e3a8a' }
-        ]
-    },
-    {
-        id: 5,
-        slug: 'non-nam',
-        name: 'Nón nam thời trang',
-        price: 99000,
-        discount_price: 0,
-        categories_id: 4,
-        images: [
-            {
-                is_main: 1,
-                image_path: 'https://placehold.co/300x400?text=Product+5'
-            }
-        ],
-        variants: []
-    }
-])
+const isLoading = computed(() => productStore.loading)
+const error = computed(() => productStore.error && productStore.error.message ? productStore.error.message : productStore.error)
+
+onMounted(() => {
+    fetchNewProducts()
+})
+
+function fetchNewProducts() {
+    productStore.fetchProducts()
+}
+
+// Lấy 5 sản phẩm mới nhất (giả sử API trả về đã sort theo mới nhất, hoặc sort ở đây)
+const products = computed(() => {
+    // Nếu muốn sort theo id giảm dần (mới nhất):
+    return [...productStore.products].sort((a, b) => b.id - a.id).slice(0, 5)
+})
 </script>

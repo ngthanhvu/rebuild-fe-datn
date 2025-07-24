@@ -8,7 +8,7 @@
             </router-link>
 
             <!-- Desktop Navigation -->
-            <ul class="hidden lg:flex gap-6 text-md font-medium text-gray-700">
+            <ul class="hidden lg:flex gap-6 text-md font-semibold text-gray-700">
                 <li>
                     <router-link to="/" class="hover:text-[#81aacc]">Trang chủ</router-link>
                 </li>
@@ -29,7 +29,8 @@
                     <router-link to="/lien-he" class="hover:text-[#81aacc]">Liên hệ</router-link>
                 </li>
                 <li>
-                    <router-link to="/tra-cuu-don-hang" class="hover:text-[#81aacc]">Kiểm tra đơn hàng</router-link>
+                    <router-link to="/tra-cuu-don-hang" class="hover:text-[#81aacc]">Kiểm tra đơn
+                        hàng</router-link>
                 </li>
             </ul>
 
