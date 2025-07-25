@@ -51,9 +51,9 @@ import { ref, computed, onMounted } from 'vue'
 import CartHeader from './CartHeader.vue'
 import CartItem from './CartItem.vue'
 import CartSummary from './CartSummary.vue'
-import { useCarts } from '../../composable/useCart'
+import { useCart } from '../../composable/useCart'
 
-const { cart, fetchCart, updateQuantity, removeFromCart } = useCarts()
+const { cart, fetchCart, updateQuantity, removeFromCart } = useCart()
 
 const cartItems = computed(() => Array.isArray(cart.value) ? cart.value : [])
 

@@ -75,21 +75,19 @@
 
 <script setup>
 import { computed, onMounted, watch } from 'vue'
-import { useCarts } from '../../composable/useCart'
-import { useCartStore } from '../../stores/cart'
+import { useCart } from '../../composable/useCart'
 
 const props = defineProps({ isOpen: Boolean })
 const emit = defineEmits(['close'])
 
-const { cart, fetchCart, removeFromCart, increaseQuantity, decreaseQuantity } = useCarts()
-const cartStore = useCartStore()
+const { cart, fetchCart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart()
 
 onMounted(() => {
     if (!cart.value.length) fetchCart()
 })
 
-watch(() => props.isOpen, (val) => {
-    if (val) fetchCart()
+watch(() => props.isOpen, (open) => {
+    if (open) fetchCart()
 })
 
 const subtotal = computed(() =>
@@ -118,7 +116,6 @@ const handleDecrease = async (cartId) => {
 
 const handleRemove = async (cartId) => {
     await removeFromCart(cartId)
-    await cartStore.removeFromCart(cartItemId)
 }
 
 const getImageUrl = (path) => {

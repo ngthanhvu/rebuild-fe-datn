@@ -29,14 +29,14 @@ import { useProducts } from '../composable/useProducts'
 import { useInventories } from '../composable/useInventorie'
 import { useReviews } from '../composable/useReviews'
 import { useAuth } from '../composable/useAuth'
-import { useCarts } from '../composable/useCart'
+import { useCart } from '../composable/useCart'
 
 const route = useRoute()
 const { getProductBySlug, getProducts } = useProducts()
 const { getInventories } = useInventories()
 const { getReviewsByProductSlug, addReview, updateReview, deleteReview, checkUserReview } = useReviews()
 const { user, isAuthenticated } = useAuth()
-const { addToCart: addToCartComposable } = useCarts()
+const { addToCart } = useCart()
 
 const product = ref(null)
 const productInventory = ref([])
@@ -249,7 +249,7 @@ const handleAddToCart = async () => {
             }
         }
 
-        await addToCartComposable(selectedVariant.id, quantity.value, price)
+        await addToCart(selectedVariant.id, quantity.value, price)
         alert('Đã thêm vào giỏ hàng')
     } catch (error) {
         console.error('Lỗi khi thêm vào giỏ hàng:', error)
