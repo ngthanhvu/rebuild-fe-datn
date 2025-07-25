@@ -3,10 +3,11 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-semibold text-gray-800">Mã Giảm Giá Mới Nhất</h2>
-            <NuxtLink to="/kho-voucher" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+            <router-link to="/kho-voucher"
+                class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                 Xem tất cả
                 <i class="fa-solid fa-arrow-right"></i>
-            </NuxtLink>
+            </router-link>
         </div>
 
         <!-- Loading -->

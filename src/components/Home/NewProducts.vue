@@ -2,9 +2,9 @@
     <div class="mt-3 bg-white p-8 rounded-[5px]">
         <div class="flex justify-between items-center mb-3">
             <h2 class="text-2xl font-semibold text-gray-800">Sản phẩm mới</h2>
-            <NuxtLink to="/products/new" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+            <router-link to="/products/new" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                 Xem tất cả →
-            </NuxtLink>
+            </router-link>
         </div>
 
         <!-- Loading -->

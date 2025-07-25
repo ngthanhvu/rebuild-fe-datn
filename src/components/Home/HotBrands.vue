@@ -2,9 +2,9 @@
     <div class="mt-3 bg-white p-8 rounded-[10px]">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-semibold text-gray-800">Thương hiệu nổi bật</h2>
-            <NuxtLink to="/brands" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+            <router-link to="/brands" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                 Xem tất cả →
-            </NuxtLink>
+            </router-link>
         </div>
 
         <!-- Brands Grid -->

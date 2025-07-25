@@ -20,7 +20,7 @@
         <div class="hidden lg:grid lg:grid-cols-5 gap-6">
             <template v-if="relatedProducts.length">
                 <template v-for="product in relatedProducts" :key="product.id">
-                    <Card v-if="product?.slug" :product="product" />
+                    <Card v-if="product?.slug" :product="product" @click="goToProduct(product.slug)" />
                 </template>
             </template>
             <div v-else class="col-span-5 text-center">

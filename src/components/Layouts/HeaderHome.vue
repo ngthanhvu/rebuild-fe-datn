@@ -16,7 +16,7 @@
                     <router-link to="/san-pham" class="hover:text-[#81aacc]">Sản phẩm</router-link>
                     <div
                         class="absolute left-1/2 -translate-x-1/2 mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all">
-                        <MegaMenu />
+                        <!-- <MegaMenu /> -->
                     </div>
                 </li>
                 <li>
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Mobile Menu -->
-        <MobileMenu :is-open="false" @close="() => { }" />
+        <!-- <MobileMenu :is-open="false" @close="() => { }" /> -->
     </nav>
     <CartPanel :is-open="isCartOpen" @close="toggleCart" />
 </template>

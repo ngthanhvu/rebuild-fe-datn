@@ -17,7 +17,7 @@
         @removeImage="removeImage" @handleImageUpload="handleImageUpload" @cancelEdit="cancelEdit"
         @editReview="editReview" @removeReview="removeReview" @handleReviewPageChange="handleReviewPageChange"
         :related-products="relatedProducts" />
-    <div v-else>Đang tải sản phẩm...</div>
+    <div v-else class="text-center py-10 mt-10">Đang tải sản phẩm...</div>
 </template>
 
 <script setup>

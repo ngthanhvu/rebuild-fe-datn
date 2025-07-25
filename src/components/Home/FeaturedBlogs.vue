@@ -28,7 +28,7 @@
                 '1024': { slidesPerView: 3, spaceBetween: 24 }
             }" class="w-full">
             <swiper-slide v-for="blog in latestBlogs" :key="blog.id">
-                <NuxtLink :to="`/blog/${blog.slug}`" class="no-underline text-gray-900">
+                <router-link :to="`/blog/${blog.slug}`" class="no-underline text-gray-900">
                     <div class="blog-card border border-gray-100">
                         <div class="image-container">
                             <img v-if="blog.image" :src="blog.image" :alt="blog.title"
@@ -48,7 +48,7 @@
                             <div class="text-[#81aacc] font-medium hover:underline cursor-pointer">Đọc thêm</div>
                         </div>
                     </div>
-                </NuxtLink>
+                </router-link>
             </swiper-slide>
         </swiper>
     </div>

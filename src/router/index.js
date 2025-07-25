@@ -1,13 +1,22 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import DefaultLayout from '../layouts/DefaultLayout.vue'
-import Home from '../pages/index.vue'
-import ProductsPage from '../pages/products.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import DefaultLayout from '../layouts/DefaultLayout.vue';
+import Home from '../pages/index.vue';
+import ProductsPage from '../pages/products.vue';
 import ProducDetail from '../pages/detail.vue';
-import LoginPage from '../pages/auth/login.vue'
-import RegisterPage from '../pages/auth/register.vue'
+import LoginPage from '../pages/auth/login.vue';
+import RegisterPage from '../pages/auth/register.vue';
+import ProfilePage from '../pages/profile.vue';
+import VoucherPage from '../pages/voucher.vue';
+import AboutPage from '../pages/about.vue';
+import ContactPage from '../pages/contacts.vue';
+import CartPage from '../pages/cart.vue';
+import OrderTracking from '../pages/order-tracking.vue';
+import BlogPage from '../pages/blogs.vue';
+import CheckOutPage from '../pages/checkout.vue';
+import FavoriteProductPage from '../pages/favorite.vue';
 
-import Admin from '../pages/admin/index.vue'
-import { authGuard } from './middleware/auth'
+import Admin from '../pages/admin/index.vue';
+import { authGuard } from './middleware/auth';
 
 const routes = [
     {
@@ -36,6 +45,42 @@ const routes = [
             {
                 path: '/san-pham/:slug',
                 component: ProducDetail
+            },
+            {
+                path: '/trang-ca-nhan',
+                component: ProfilePage
+            },
+            {
+                path: '/kho-voucher',
+                component: VoucherPage
+            },
+            {
+                path: '/gioi-thieu',
+                component: AboutPage
+            },
+            {
+                path: '/lien-he',
+                component: ContactPage
+            },
+            {
+                path: '/gio-hang',
+                component: CartPage
+            },
+            {
+                path: '/tra-cuu-don-hang',
+                component: OrderTracking
+            },
+            {
+                path: '/tin-tuc',
+                component: BlogPage
+            },
+            {
+                path: '/thanh-toan',
+                component: CheckOutPage
+            },
+            {
+                path: '/san-pham-yeu-thich',
+                component: FavoriteProductPage
             }
         ]
     },
