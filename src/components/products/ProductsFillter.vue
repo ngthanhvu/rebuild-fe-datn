@@ -67,7 +67,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useProducts } from '../../composable/useProducts' // Cập nhật path nếu khác
 const emit = defineEmits(['filter'])
 
 const filters = ref({
@@ -80,18 +81,26 @@ const filters = ref({
 })
 
 const filterOptions = ref({
-    categories: [
-        { id: 1, name: 'Áo' },
-        { id: 2, name: 'Quần' },
-        { id: 3, name: 'Giày' }
-    ],
-    brands: [
-        { id: 1, name: 'Nike' },
-        { id: 2, name: 'Adidas' },
-        { id: 3, name: 'Uniqlo' }
-    ],
-    colors: ['red', 'black', 'white', 'blue'],
-    sizes: ['S', 'M', 'L', 'XL']
+    categories: [],
+    brands: [],
+    colors: [],
+    sizes: []
+})
+
+const { getFilterOptions } = useProducts()
+
+onMounted(async () => {
+    try {
+        const options = await getFilterOptions()
+        filterOptions.value = {
+            categories: options.categories || [],
+            brands: options.brands || [],
+            colors: options.colors || [],
+            sizes: options.sizes || []
+        }
+    } catch (err) {
+        console.error('Không thể tải filter options:', err)
+    }
 })
 
 const applyFilters = () => {

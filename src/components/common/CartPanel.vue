@@ -14,33 +14,39 @@
                         <i class="bi bi-cart text-4xl block mb-3"></i>
                         <p class="text-lg">Giỏ hàng của bạn đang trống</p>
                     </div>
-                    <router-link to="/product"
+                    <router-link to="/san-pham"
                         class="inline-flex items-center px-4 py-2 bg-[#81AACC] text-white rounded-md hover:bg-[#4a85b6] transition-colors">
                         <i class="bi bi-bag mr-2"></i> Mua sắm ngay
                     </router-link>
                 </div>
 
                 <div v-else v-for="item in cart" :key="item.id" class="flex gap-4 pb-4 border-b border-gray-200">
-                    <img :src="item.image" :alt="item.name" class="w-20 h-20 object-cover rounded" />
+                    <img :src="getImageUrl(item.variant?.product?.main_image?.image_path)"
+                        :alt="item.variant?.product?.name || 'Không có tên'" class="w-20 h-20 object-cover rounded" />
                     <div class="flex-1">
-                        <h6 class="font-medium mb-1">{{ item.name }}</h6>
+                        <h6 class="font-medium mb-1">{{ item.variant?.product?.name || 'Không có tên' }}</h6>
                         <p class="text-sm text-gray-600 mb-1">
-                            <span v-if="item.size">Size: {{ item.size }}</span>
-                            <span v-if="item.color"> | Màu: {{ item.color }}</span>
+                            <span v-if="item.variant?.size">Size: {{ item.variant.size }}</span>
+                            <span v-if="item.variant?.color"> | Màu: {{ item.variant.color }}</span>
                         </p>
-                        <p class="text-sm text-gray-500 mb-1">Còn lại: {{ item.stock }} sản phẩm</p>
+                        <p class="text-sm text-gray-500 mb-1">
+                            Còn lại: {{ item.variant?.inventory?.quantity ?? item.variant?.stock ?? 0 }} sản phẩm
+                        </p>
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2">
-                                <button class="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
-                                    @click="decrease(item.id)" :disabled="item.quantity <= 1">-</button>
+                                <button
+                                    class="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100 cursor-pointer"
+                                    @click="handleDecrease(item.id)" :disabled="item.quantity <= 1">-</button>
                                 <span class="text-sm">{{ item.quantity }}</span>
-                                <button class="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
-                                    @click="increase(item.id)" :disabled="item.quantity >= item.stock">+</button>
+                                <button
+                                    class="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100 cursor-pointer"
+                                    @click="handleIncrease(item.id)"
+                                    :disabled="item.quantity >= (item.variant?.inventory?.quantity || 0)">+</button>
                             </div>
                             <span class="font-medium">{{ formatPrice(item.price) }}</span>
                         </div>
                     </div>
-                    <button class="text-gray-400 hover:text-red-500" @click="remove(item.id)">
+                    <button class="text-gray-400 hover:text-red-500 cursor-pointer" @click="handleRemove(item.id)">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
@@ -49,7 +55,7 @@
             <div v-if="cart.length > 0" class="mt-4 pt-4 border-t border-gray-200">
                 <div class="flex justify-between items-center mb-4">
                     <span class="font-medium">Tổng tiền:</span>
-                    <span class="font-bold text-lg">{{ formatPrice(total) }}</span>
+                    <span class="font-bold text-lg">{{ formatPrice(subtotal) }}</span>
                 </div>
                 <div class="space-y-2">
                     <router-link to="/gio-hang"
@@ -68,55 +74,59 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
+import { useCarts } from '../../composable/useCart'
+import { useCartStore } from '../../stores/cart'
 
-const props = defineProps({
-    isOpen: Boolean
+const props = defineProps({ isOpen: Boolean })
+const emit = defineEmits(['close'])
+
+const { cart, fetchCart, removeFromCart, increaseQuantity, decreaseQuantity } = useCarts()
+const cartStore = useCartStore()
+
+onMounted(() => {
+    if (!cart.value.length) fetchCart()
 })
-defineEmits(['close'])
 
-const cart = ref([
-    {
-        id: 1,
-        name: 'Áo thun nam tay ngắn',
-        image: 'https://placehold.co/100',
-        size: 'M',
-        color: 'Trắng',
-        stock: 10,
-        price: 250000,
-        quantity: 1
-    },
-    {
-        id: 2,
-        name: 'Giày sneaker nữ',
-        image: 'https://placehold.co/100',
-        size: '38',
-        color: 'Đen',
-        stock: 5,
-        price: 750000,
-        quantity: 2
+watch(() => props.isOpen, (val) => {
+    if (val) fetchCart()
+})
+
+const subtotal = computed(() =>
+    cart.value.reduce((total, item) => total + item.price * item.quantity, 0)
+)
+
+const formatPrice = (price) =>
+    new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(price)
+
+const handleIncrease = async (cartId) => {
+    const item = cart.value.find(i => i.id === cartId)
+    if (item && item.quantity < (item.variant?.inventory?.quantity || 0)) {
+        await increaseQuantity(cartId)
     }
-])
-
-const formatPrice = price => {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
 }
 
-const increase = id => {
-    const item = cart.value.find(i => i.id === id)
-    if (item && item.quantity < item.stock) item.quantity++
+const handleDecrease = async (cartId) => {
+    const item = cart.value.find(i => i.id === cartId)
+    if (item && item.quantity > 1) {
+        await decreaseQuantity(cartId)
+    }
 }
 
-const decrease = id => {
-    const item = cart.value.find(i => i.id === id)
-    if (item && item.quantity > 1) item.quantity--
+const handleRemove = async (cartId) => {
+    await removeFromCart(cartId)
+    await cartStore.removeFromCart(cartItemId)
 }
 
-const remove = id => {
-    cart.value = cart.value.filter(i => i.id !== id)
+const getImageUrl = (path) => {
+    const base = import.meta.env.VITE_API_BASE_URL
+    if (!path) return '/default-image.jpg'
+    if (path.startsWith('http')) return path
+    return `${base.replace(/\/$/, '')}/${path.replace(/^\/+/, '')}`
 }
-
-const total = computed(() => cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0))
 </script>
 
 <style scoped>

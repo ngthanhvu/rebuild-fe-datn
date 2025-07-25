@@ -223,7 +223,7 @@ const props = defineProps({
         default: 0
     },
     productInventory: {
-        type: Number,
+        type: Array,
         default: 0
     }
 })

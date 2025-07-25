@@ -60,7 +60,7 @@
                     <i class="bi bi-cart text-xl"></i>
                     <span
                         class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                        0
+                        {{ totalQuantity }}
                     </span>
                 </div>
 
@@ -93,18 +93,26 @@ import UserMenu from '../auth/UserMenu.vue';
 import CartPanel from '../common/CartPanel.vue';
 import { useAuthStore } from '../../stores/auth'
 import Cookies from 'js-cookie'
+import { useCart } from '../../composable/useCart';
 
+
+const { cart, fetchCart } = useCart()
 const isCartOpen = ref(false);
 const toggleCart = () => { isCartOpen.value = !isCartOpen.value; };
 
 const authStore = useAuthStore()
 
-onMounted(() => {
+const totalQuantity = computed(() =>
+    cart.value.reduce((total, item) => total + item.quantity, 0)
+)
+
+onMounted(async () => {
     if (!authStore.user && Cookies.get('user')) {
         try {
             authStore.setUser(JSON.parse(Cookies.get('user')))
         } catch { }
     }
+    await fetchCart();
 })
 
 const isLoggedIn = computed(() => !!authStore.user)

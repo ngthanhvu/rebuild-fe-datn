@@ -88,8 +88,12 @@ const sortOption = ref('name_asc')
 const filters = ref({
     min_price: null,
     max_price: null,
-    color: null
+    category: [],
+    brand: [],
+    color: [],
+    size: []
 })
+
 
 const handleFilter = (newFilter) => {
     filters.value = { ...filters.value, ...newFilter }
@@ -107,12 +111,25 @@ const handleSort = () => {
 const filteredProducts = computed(() => {
     return productStore.products.filter(p => {
         const matchName = p.name.toLowerCase().includes(searchQuery.value.toLowerCase().trim())
+
         const matchMin = !filters.value.min_price || p.price >= filters.value.min_price
         const matchMax = !filters.value.max_price || p.price <= filters.value.max_price
-        const matchColor = !filters.value.color || p.color === filters.value.color
-        return matchName && matchMin && matchMax && matchColor
+
+        const matchCategory = filters.value.category.length === 0 || filters.value.category.includes(p.categories_id)
+        const matchBrand = filters.value.brand.length === 0 || filters.value.brand.includes(p.brand_id)
+
+        const matchColor =
+            filters.value.color.length === 0 ||
+            p.variants.some(variant => filters.value.color.includes(variant.color))
+
+        const matchSize =
+            filters.value.size.length === 0 ||
+            p.variants.some(variant => filters.value.size.includes(variant.size))
+
+        return matchName && matchMin && matchMax && matchCategory && matchBrand && matchColor && matchSize
     })
 })
+
 
 const sortedProducts = computed(() => {
     const [key, dir] = sortOption.value.split('_')

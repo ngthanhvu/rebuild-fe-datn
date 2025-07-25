@@ -14,9 +14,9 @@
         @update:selectedColor="val => selectedColor = val" @update:quantity="val => quantity = val"
         @update:mainImage="val => mainImage = val" v-model:activeTab="activeTab" @submitReview="submitReview"
         @update:showReviewForm="val => showReviewForm = val" @update:reviewForm="val => reviewForm = val"
-        @removeImage="removeImage" @handleImageUpload="handleImageUpload" @cancelEdit="cancelEdit"
-        @editReview="editReview" @removeReview="removeReview" @handleReviewPageChange="handleReviewPageChange"
-        :related-products="relatedProducts" />
+        @removeImage="removeImage" @handleImageUpload="handleImageUpload" @add-to-cart="handleAddToCart"
+        @cancelEdit="cancelEdit" @editReview="editReview" @removeReview="removeReview"
+        @handleReviewPageChange="handleReviewPageChange" :related-products="relatedProducts" />
     <div v-else class="text-center py-10 mt-10">Đang tải sản phẩm...</div>
 </template>
 
@@ -29,12 +29,14 @@ import { useProducts } from '../composable/useProducts'
 import { useInventories } from '../composable/useInventorie'
 import { useReviews } from '../composable/useReviews'
 import { useAuth } from '../composable/useAuth'
+import { useCarts } from '../composable/useCart'
 
 const route = useRoute()
 const { getProductBySlug, getProducts } = useProducts()
 const { getInventories } = useInventories()
 const { getReviewsByProductSlug, addReview, updateReview, deleteReview, checkUserReview } = useReviews()
 const { user, isAuthenticated } = useAuth()
+const { addToCart: addToCartComposable } = useCarts()
 
 const product = ref(null)
 const productInventory = ref([])
@@ -72,6 +74,19 @@ const totalReviewPages = ref(1)
 const totalReviews = ref(0)
 const reviewsPerPage = ref(3)
 const currentReviewPage = ref(1)
+
+useHead(() => {
+    if (!product.value) return {}
+    return {
+        title: `${product.value.name} | DEVGANG`,
+        meta: [
+            {
+                name: 'description',
+                content: product.value.description?.substring(0, 160) || 'Chi tiết sản phẩm từ DEVGANG'
+            }
+        ]
+    }
+})
 
 const fetchReviews = async (page = 1) => {
     if (!product.value) return
@@ -203,6 +218,46 @@ const handleReviewPageChange = (page) => {
     fetchReviews(page)
 }
 
+const handleAddToCart = async () => {
+    try {
+        console.log('selectedSize:', selectedSize.value)
+        console.log('selectedColor:', selectedColor.value)
+        console.log('variants:', product.value.variants)
+
+        const selectedVariant = product.value.variants?.find(v =>
+            String(v.size) === String(selectedSize.value) &&
+            String(v.color) === String(selectedColor.value?.name)
+        )
+
+        console.log('selectedVariant:', selectedVariant)
+
+        if (!selectedVariant) {
+            alert('Không tìm thấy biến thể sản phẩm phù hợp')
+            return
+        }
+
+        if (quantity.value > selectedVariant.stock) {
+            alert('Số lượng vượt quá số lượng trong kho')
+            return
+        }
+
+        let price = selectedVariant.price
+        if (flashSalePrice.value && product.value.price) {
+            const percent = Math.round(100 - (flashSalePrice.value / product.value.price) * 100)
+            if (percent > 0) {
+                price = Math.round(selectedVariant.price * (1 - percent / 100))
+            }
+        }
+
+        await addToCartComposable(selectedVariant.id, quantity.value, price)
+        alert('Đã thêm vào giỏ hàng')
+    } catch (error) {
+        console.error('Lỗi khi thêm vào giỏ hàng:', error)
+        alert('Có lỗi xảy ra khi thêm vào giỏ hàng')
+    }
+}
+
+
 const relatedProducts = ref([])
 const fetchRelatedProducts = async () => {
     if (product.value?.categories_id) {
@@ -227,11 +282,6 @@ onMounted(async () => {
         product.value = data
         mainImage.value = data.images?.[0]?.image_path || ''
         displayPrice.value = data.price
-
-        useHead({
-            title: `${data.name} | DEVGANG`,
-            meta: [{ name: 'description', content: data.description?.substring(0, 160) || 'Chi tiết sản phẩm từ DEVGANG' }]
-        })
 
         const inventories = await getInventories({ product_id: data.id })
         productInventory.value = inventories
