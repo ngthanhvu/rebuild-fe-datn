@@ -36,39 +36,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import ReviewCard from '../ui/ReviewCard.vue'
 
-const reviews = ref([
-    {
-        id: 1,
-        rating: 5,
-        content: 'Sản phẩm rất tuyệt vời, mình rất hài lòng!',
-        user: { name: 'Phạm Thị D', avatar: '' }
-    },
-    {
-        id: 2,
-        rating: 4,
-        content: 'Chất lượng ổn, giao hàng nhanh.',
-        user: { name: 'Trần Thị B', avatar: '' }
-    },
-    {
-        id: 3,
-        rating: 5,
-        content: 'Sẽ tiếp tục ủng hộ shop trong tương lai!',
-        user: { name: 'Lê Văn C', avatar: '' }
-    },
-    {
-        id: 4,
-        rating: 4,
-        content: 'Sản phẩm rất tuyệt vpone, mình rất hài nây!',
-        user: { name: 'Nguyễn Văn D', avatar: '' }
+import { useReviewStore } from '../../stores/review'
+
+const reviewStore = useReviewStore()
+const reviews = computed(() => reviewStore.reviews || [])
+
+onMounted(() => {
+    if (reviewStore.reviews.length === 0) {
+        reviewStore.getLatestReview()
     }
-])
+})
 </script>
 
 <style scoped>

@@ -54,22 +54,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { onMounted, computed } from 'vue'
+import { useBrandStore } from '../../stores/brands'
 
-// Dữ liệu cứng
-const brands = ref([
-    { id: 1, name: 'Nike', slug: 'nike', products_count: 25, image: 'https://placehold.co/80x80?text=N' },
-    { id: 2, name: 'Adidas', slug: 'adidas', products_count: 18, image: 'https://placehold.co/80x80?text=A' },
-    { id: 3, name: 'Puma', slug: 'puma', products_count: 12, image: 'https://placehold.co/80x80?text=P' },
-    { id: 4, name: 'Reebok', slug: 'reebok', products_count: 9, image: 'https://placehold.co/80x80?text=R' },
-    { id: 5, name: 'Converse', slug: 'converse', products_count: 15, image: 'https://placehold.co/80x80?text=C' },
-    { id: 6, name: 'Vans', slug: 'vans', products_count: 10, image: 'https://placehold.co/80x80?text=V' }
-])
+const brandStore = useBrandStore()
+const brands = computed(() => brandStore.brands)
 
-const featuredBrand = computed(() => {
-    return brands.value.reduce((prev, curr) => (prev.products_count > curr.products_count ? prev : curr), brands.value[0])
+onMounted(() => {
+    if (brandStore.brands.length === 0) {
+        brandStore.fetchBrands()
+    }
 })
 
+const featuredBrand = computed(() => {
+    return brands.value.reduce((prev, curr) =>
+        prev.products_count > curr.products_count ? prev : curr,
+        brands.value[0]
+    )
+})
 const getBrandLogo = (brand) => {
     if (brand.image) return brand.image
     return `https://placehold.co/100x100?text=${brand.name.charAt(0)}`
@@ -81,6 +83,7 @@ const handleImageError = (event) => {
 }
 
 const navigateToBrand = (brandId) => {
-    navigateTo(`/brands/${brandId}`)
+    // Nếu bạn đang dùng vue-router trong setup
+    window.location.href = `/brands/${brandId}`
 }
 </script>

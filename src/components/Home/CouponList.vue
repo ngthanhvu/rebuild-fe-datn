@@ -88,8 +88,11 @@
     </div>
 </template>
 
-<script setup>
+<!-- <script setup>
 import { ref, computed } from 'vue'
+import { useCouponStore } from '../../stores/coupons'
+
+const couponStore = useCouponStore()
 
 const isLoading = ref(false)
 
@@ -166,7 +169,61 @@ const getCouponStatus = coupon => {
     if (isUsedUp(coupon)) return 'used'
     return 'active'
 }
+</script> -->
+<script setup>
+import { computed, onMounted } from 'vue'
+import { useCouponStore } from '../../stores/coupons'
+
+const couponStore = useCouponStore()
+
+onMounted(() => {
+    couponStore.fetchCoupons()
+})
+
+const latestCoupons = computed(() =>
+    couponStore.coupons
+        .filter(c => c.is_active)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 4)
+)
+const formatCurrency = (amount) => {
+    if (!amount || isNaN(amount)) return '0 ₫'
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(amount)
+}
+
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A'
+    try {
+        return new Date(dateString).toLocaleDateString('vi-VN')
+    } catch (error) {
+        return 'N/A'
+    }
+}
+
+const isExpired = (coupon) => {
+    if (!coupon || !coupon.end_date) return false
+    const now = new Date()
+    const endDate = new Date(coupon.end_date)
+    return now > endDate
+}
+
+const isUsedUp = (coupon) => {
+    if (!coupon || !coupon.usage_limit) return false
+    return coupon.used_count >= coupon.usage_limit
+}
+
+const getCouponStatus = (coupon) => {
+    if (!coupon) return 'inactive'
+    if (isExpired(coupon)) return 'expired'
+    if (isUsedUp(coupon)) return 'used'
+    if (!coupon.is_active) return 'inactive'
+    return 'active'
+}
 </script>
+
 
 <style scoped>
 .left-edge {

@@ -55,49 +55,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination as SwiperPagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-const loading = ref(false)
+import { useBlogStore } from '../../stores/blogs'
 
-const latestBlogs = ref([
-    {
-        id: 1,
-        title: '5 mẹo chăm sóc da vào mùa hè',
-        description: 'Khám phá cách giữ làn da khỏe mạnh trong những ngày nắng nóng.',
-        image: 'https://placehold.co/600x400?text=Blog+1',
-        slug: 'meo-cham-soc-da-mua-he',
-        published_at: '2024-07-10',
-        author: {
-            username: 'beauty_admin'
-        }
-    },
-    {
-        id: 2,
-        title: 'Top 10 sản phẩm bán chạy tháng 6',
-        description: 'Danh sách những sản phẩm được yêu thích nhất trong tháng 6.',
-        image: 'https://placehold.co/600x400?text=Blog+2',
-        slug: 'san-pham-ban-chay-thang-6',
-        published_at: '2024-07-01',
-        author: {
-            username: 'shop_editor'
-        }
-    },
-    {
-        id: 3,
-        title: 'Hướng dẫn chọn kem chống nắng phù hợp',
-        description: 'Tìm hiểu cách chọn loại kem chống nắng phù hợp với từng loại da.',
-        image: '',
-        slug: 'chon-kem-chong-nang',
-        published_at: '2024-06-25',
-        author: {
-            username: 'skin_expert'
-        }
+const blogStore = useBlogStore()
+
+const latestBlogs = computed(() => blogStore.blogs)
+const loading = computed(() => blogStore.loading)
+
+onMounted(() => {
+    if (!blogStore.blogs.length) {
+        blogStore.getBlogs()
+        // console.log('Fetching latest blogs...', blogStore.blogs)
     }
-])
+})
 
 const formatDate = (dateString) => {
     if (!dateString) return ''
@@ -109,6 +85,7 @@ const formatDate = (dateString) => {
     })
 }
 </script>
+
 
 <style scoped>
 .swiper-slide {

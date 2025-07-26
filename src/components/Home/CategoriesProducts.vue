@@ -52,54 +52,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Card from '../ui/Card.vue'
+import { useProductStore } from '../../stores/products'
+import { useCategoryStore } from '../../stores/categories'
 
-// Dữ liệu cứng danh mục
-const categories = ref([
-    { id: 1, name: 'Áo thun' },
-    { id: 2, name: 'Quần jean' },
-    { id: 3, name: 'Phụ kiện' }
-])
+const productStore = useProductStore()
+const categoryStore = useCategoryStore()
 
-// Dữ liệu cứng sản phẩm
-const products = ref([
-    {
-        id: 1,
-        name: 'Áo thun trơn cotton',
-        slug: 'ao-thun-cotton',
-        price: 199000,
-        discount_price: 159000,
-        categories_id: 1,
-        images: [{ is_main: 1, image_path: 'https://placehold.co/300x400?text=Product+1' }],
-        variants: [{ color: '#000000' }, { color: '#60a5fa' }]
-    },
-    {
-        id: 2,
-        name: 'Quần jean ống đứng',
-        slug: 'quan-jean-ong-dung',
-        price: 299000,
-        categories_id: 2,
-        images: [{ is_main: 1, image_path: 'https://placehold.co/300x400?text=Product+2' }],
-        variants: [{ color: '#64748b' }]
-    },
-    {
-        id: 3,
-        name: 'Nón lưỡi trai',
-        slug: 'non-luoi-trai',
-        price: 129000,
-        categories_id: 3,
-        images: [{ is_main: 1, image_path: 'https://placehold.co/300x400?text=Product+3' }],
-        variants: []
-    },
-    {
-        id: 4,
-        name: 'Áo thun tay lỡ',
-        slug: 'ao-thun-tay-lo',
-        price: 209000,
-        categories_id: 1,
-        images: [{ is_main: 1, image_path: 'https://placehold.co/300x400?text=Product+4' }],
-        variants: [{ color: '#f87171' }, { color: '#22c55e' }]
-    }
-])
+const categories = computed(() => categoryStore.categories)
+const products = computed(() => productStore.products)
 
 const selectedCategory = ref(null)
 const isLoading = ref(false)
