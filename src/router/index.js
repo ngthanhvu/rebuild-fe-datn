@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '../layouts/DefaultLayout.vue';
+import AdminLayout from '../layouts/AdminLayout.vue';
+
 import Home from '../pages/index.vue';
 import ProductsPage from '../pages/products.vue';
 import ProducDetail from '../pages/detail.vue';
@@ -16,6 +18,9 @@ import CheckOutPage from '../pages/checkout.vue';
 import FavoriteProductPage from '../pages/favorite.vue';
 
 import Admin from '../pages/admin/index.vue';
+import ProductsPageAdmin from '../pages/admin/products/index.vue';
+import ProductsCreate from '../pages/admin/products/create.vue';
+
 import { authGuard } from './middleware/auth';
 
 const routes = [
@@ -86,8 +91,22 @@ const routes = [
     },
     {
         path: '/admin',
-        component: Admin,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        component: AdminLayout,
+        children: [
+            {
+                path: '',
+                component: Admin
+            },
+            {
+                path: '/admin/products',
+                component: ProductsPageAdmin
+            },
+            {
+                path: '/admin/products/create',
+                component: ProductsCreate
+            }
+        ]
+        // meta: { requiresAuth: true, requiresAdmin: true }
     }
 ]
 

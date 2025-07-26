@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "@tailwindcss/vite": "^4.1.11",
     "@vueuse/head": "^2.0.0",
     "axios": "^1.11.0",

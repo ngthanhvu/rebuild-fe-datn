@@ -1,16 +1,16 @@
 <template>
-    <BlogsContent />
+    <ProductsContent />
 </template>
 
 <script setup>
-import BlogsContent from '../components/site/BlogsContent.vue';
+import ProductsContent from '../../../components/admin/products/ProductsContent.vue';
 import { useHead } from '@vueuse/head';
 useHead({
-    title: "Tin tức | DEVGANG",
+    title: "Quản lý sản phẩm | DEVGANG",
     meta: [
         {
             name: "description",
-            content: "Tin tức"
+            content: "Quản lý sản phẩm"
         }
     ]
 })
